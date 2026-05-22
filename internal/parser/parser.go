@@ -1,18 +1,16 @@
-// Package parser provides log entry parsers for common web server formats.
 package parser
 
 import "time"
 
-// LogEntry is the common interface implemented by all parsed log entries.
-type LogEntry interface {
-	// Timestamp returns the time at which the log event occurred.
+// Entry represents a single parsed log entry.
+type Entry interface {
+	// Timestamp returns the time associated with this log entry.
 	Timestamp() time.Time
+	// String returns the original raw log line.
+	String() string
 }
 
-// Parser is the common interface for log line parsers.
+// Parser parses a single log line into an Entry.
 type Parser interface {
-	// Parse parses a single log line and returns a LogEntry.
-	// Returns (nil, nil) for empty or skipped lines.
-	// Returns (nil, error) if the line cannot be parsed.
-	Parse(line string) (LogEntry, error)
+	Parse(line string) (Entry, error)
 }

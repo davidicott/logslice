@@ -1,15 +1,9 @@
 package parser
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
-// Formats lists all supported log format names.
-var Formats = []string{"nginx", "apache", "combined", "syslog", "json", "csv", "logfmt"}
-
-// NewFromFormat returns a Parser for the given format name using sensible defaults.
-// Returns an error if the format is unknown.
+// NewFromFormat returns a Parser for the given named format.
+// Supported formats: nginx, apache, combined, syslog, json, csv, logfmt, w3c.
 func NewFromFormat(format string) (Parser, error) {
 	switch format {
 	case "nginx":
@@ -21,12 +15,14 @@ func NewFromFormat(format string) (Parser, error) {
 	case "syslog":
 		return NewSyslogParser(), nil
 	case "json":
-		return NewJSONParser("", ""), nil
+		return NewJSONParser(""), nil
 	case "csv":
-		return NewCSVParser(0, time.RFC3339), nil
+		return NewCSVParser("", 0), nil
 	case "logfmt":
-		return NewLogfmtParser("", ""), nil
+		return NewLogfmtParser(""), nil
+	case "w3c":
+		return NewW3CParser(), nil
 	default:
-		return nil, fmt.Errorf("unknown format %q: supported formats are %v", format, Formats)
+		return nil, fmt.Errorf("unknown format %q", format)
 	}
 }
